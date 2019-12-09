@@ -37,9 +37,9 @@ for (let i = 1; i < layers.length; i++) {
   }
 }
 
-console.log(layerZeroes);
-console.log(maxLayerZeroes);
-console.log(maxLayer);
+// console.log(layerZeroes);
+// console.log(maxLayerZeroes);
+// console.log(maxLayer);
 
 let maxLayerCounts = {}
 
@@ -51,6 +51,6 @@ for (let num of layers[maxLayer-1]) {
   }
 }
 
-console.log(maxLayerCounts);
+// console.log(maxLayerCounts);
 
 console.log(maxLayerCounts[1] * maxLayerCounts[2])

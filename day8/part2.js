@@ -1,4 +1,5 @@
 const fs = require('fs');
+const colors = require('colors');
 
 let input = fs.readFileSync('input.txt').toString().split('').map(num => parseInt(num));
 
@@ -19,7 +20,7 @@ layers[0].map((color, i) => {
     color = layers[j][i];
     j++;
   }
-  process.stdout.write(color === 0 ? " " : "*");
+  process.stdout.write(color === 0 ? ".".black : ".".white);
   (i + 1) % 25 === 0 && console.log("");
 });
 
