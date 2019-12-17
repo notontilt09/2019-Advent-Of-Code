@@ -2,7 +2,7 @@ const fs = require('fs');
 
 let input = fs.readFileSync('input.txt').toString().split(',').map(Number);
 
-input = input.concat(Array(5000).fill(0));
+input = input.concat(Array(10000).fill(0));
 
 let pc = 0;
 let relBase = 0;
@@ -177,5 +177,8 @@ while (input[pc] !== 99) {
       break;
   }
 }
+
+console.log(outputs[outputs.length - 1])
+
 
 
