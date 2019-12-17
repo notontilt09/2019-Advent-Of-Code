@@ -2,6 +2,7 @@ const fs = require('fs');
 
 let input = fs.readFileSync('input.txt').toString().split(',').map(Number);
 
+// trying to add a bunch of 0's to end of input, this isn't helping
 input = input.concat(Array(10000).fill(0));
 
 let pc = 0;
