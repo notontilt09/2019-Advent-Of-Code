@@ -2,13 +2,9 @@ const fs = require('fs');
 
 let input = fs.readFileSync('input.txt').toString().split(',').map(Number);
 
-// trying to add a bunch of 0's to end of input, this isn't helping
-input = input.concat(Array(10000).fill(0));
-
 let pc = 0;
 let relBase = 0;
 input[0] = 2;
-console.log(input);
 
 // movement routines calculated by hand
 // ASCII CONVERSIONS: 
@@ -31,7 +27,7 @@ console.log(input);
 // ROUTINE = 'A,B,A,C,B,C,B,C,A,C'
 
 let asciiA = '82,44,49,50,44,76,44,54,44,82,44,49,50,10';
-let asciiB = '76,44,56,44,76,44,54,44,76,49,48,10';
+let asciiB = '76,44,56,44,76,44,54,44,76,44,49,48,10';
 let asciiC = '82,44,49,50,44,76,44,49,48,44,76,44,54,44,82,44,49,48,10';
 let asciiMain = '65,44,66,44,65,44,67,44,66,44,67,44,66,44,67,44,65,44,67,10'
 
@@ -126,6 +122,7 @@ while (input[pc] !== 99) {
       pc += 4;
       break;
     case 3:
+      // console.log(view);
       let moveInput = inputArray[inputIndex]
       // console.log('moveInput', moveInput);
       inputIndex++;
@@ -180,6 +177,7 @@ while (input[pc] !== 99) {
 }
 
 console.log(outputs[outputs.length - 1])
+
 
 
 
