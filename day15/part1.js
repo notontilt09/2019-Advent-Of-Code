@@ -22,20 +22,20 @@ let relBase = 0;
 let grid = {}
 for (let i = -30; i < 30; i++) {
   for (let j = -30; j < 30; j++) {
-    grid[`${i},${j}`] = {'n': '?', 's': '?', 'e': '?', 'w': '?', 'goal': false, 'me': '#'}
+    grid[`${j},${i}`] = {'n': '?', 's': '?', 'e': '?', 'w': '?', 'goal': false, 'me': '#'}
   }
 }
-currX = 0;
-currY = 0;
-grid[`${currX},${currY}`]['me'] = 'S'
+X = 0;
+Y = 0;
+grid[`${X},${Y}`]['me'] = 'S'
 // console.log(grid)
 let move;
 // main program loop
 const findGoal = () => {
   while (true) {
     // console.log('currentMove', move);
-    // console.log(`currX: ${currX}, currY: ${currY}`);
-    // console.log(grid[`${currX},${currY}`])
+    // console.log(`X: ${X}, Y: ${Y}`);
+    // console.log(grid[`${X},${Y}`])
     // console.log(grid);
     // convert instruction to string to slice off opCode and operand modes
     let opString = input[pc].toString();
@@ -100,9 +100,12 @@ const findGoal = () => {
         break;
       case 3:
         let moveInput;
-        const possibleMoves = Object.keys(grid[`${currX},${currY}`]).filter(move => grid[`${currX},${currY}`][move] === '?')
-        if (possibleMoves.length) {
-          move = possibleMoves[Math.floor(Math.random() * possibleMoves.length)]
+        const unknowns = Object.keys(grid[`${X},${Y}`]).filter(move => grid[`${X},${Y}`][move] === '?')
+        // console.log(`currently at ${X},${Y}`);
+        // console.log(`grid[here]: ${JSON.stringify(grid[`${X},${Y}`])}`);
+        if (unknowns.length) {
+          move = unknowns[Math.floor(Math.random() * unknowns.length)]
+          // console.log('attempting to move', move);
           switch (move) {
             case 'n':
               moveInput = 1;
@@ -118,11 +121,12 @@ const findGoal = () => {
               break;
           }
         } else {
-          // console.log(`fully explored room ${currX}, ${currY}, making a random move`)
+          // console.log(`fully explored room ${X}, ${Y}, making a random move`)
           // if we get here, we know everything about the current room.  let's just move in a random possible direction
-          const possibleMoves = Object.keys(grid[`${currX},${currY}`]).filter(move => grid[`${currX},${currY}`][move] === '.')
+          const possibleMoves = Object.keys(grid[`${X},${Y}`]).filter(move => grid[`${X},${Y}`][move] === '.' && move !== 'me')
           move = possibleMoves[Math.floor(Math.random() * possibleMoves.length)]
-          console.log('moving randomly at', currX, currY);
+          // console.log(possibleMoves, move)
+          // console.log('moving randomly at', X, Y);
           switch (move) {
             case 'n':
               moveInput = 1;
@@ -148,74 +152,78 @@ const findGoal = () => {
         pc += 2;
         break;
       case 4:
-        // console.log('output', operandA)
+        // console.log('output', operandA, 'move', move);
         if (operandA === 0) {
           // console.log('hit a wall')
           switch(move) {
             case 'n':
               // console.log('inside output switch');
-              grid[`${currX},${currY}`]['n'] = '#'
+              grid[`${X},${Y}`]['n'] = '#'
+              grid[`${X},${Y+1}`]['me'] = '#'
               break;
             case 's':
-              grid[`${currX},${currY}`]['s'] = '#'
+              grid[`${X},${Y}`]['s'] = '#'
+              grid[`${X},${Y-1}`]['me'] = '#'
               break;
             case 'e':
-              grid[`${currX},${currY}`]['e'] = '#'
+              grid[`${X},${Y}`]['e'] = '#'
+              grid[`${X+1},${Y}`]['me'] = '#'
               break;
             case 'w':
-              grid[`${currX},${currY}`]['w']= '#'
+              grid[`${X},${Y}`]['w']= '#'
+              grid[`${X-1},${Y}`]['me'] = '#'
               break;
           }
         } else if (operandA === 1) {
           // console.log(`succesful move to the ${move}`)
           switch(move) {
             case 'n':
-              if (currX !== 0 && currY !== 0) {
-                grid[`${currX},${currY}`]['me']= '.'
-              }
-              grid[`${currX},${currY}`][move]= '.'
-              grid[`${currX},${currY+1}`][reverse(move)] = '.'
-              currY += 1;
+              grid[`${X},${Y+1}`]['me']= '.'
+              grid[`${X},${Y}`][move]= '.'
+              grid[`${X},${Y+1}`][reverse(move)] = '.'
+              Y += 1;
               break;
             case 's':
-              if (currX !== 0 && currY !== 0) {
-                grid[`${currX},${currY}`]['me']= '.'
-              }
-              grid[`${currX},${currY}`][move]= '.'
-              grid[`${currX},${currY-1}`][reverse(move)] = '.'
-              currY -= 1;
+              grid[`${X},${Y-1}`]['me']= '.'
+              grid[`${X},${Y}`][move]= '.'
+              grid[`${X},${Y-1}`][reverse(move)] = '.'
+              Y -= 1;
               break;
             case 'e':
-              if (currX !== 0 && currY !== 0) {
-                grid[`${currX},${currY}`]['me']= '.'
-              }
-              grid[`${currX},${currY}`][move]= '.'
-              grid[`${currX+1},${currY}`][reverse(move)] = '.'
-              currX += 1;
+              grid[`${X+1},${Y}`]['me']= '.'
+              grid[`${X},${Y}`][move]= '.'
+              grid[`${X+1},${Y}`][reverse(move)] = '.'
+              X += 1;
               break;
             case 'w':
-              if (currX !== 0 && currY !== 0) {
-                grid[`${currX},${currY}`]['me']= '.'
-              }
-              grid[`${currX},${currY}`][move]= '.'
-              grid[`${currX-1},${currY}`][reverse(move)] = '.'
-              currX -= 1;
+              grid[`${X-1},${Y}`]['me']= '.'
+              grid[`${X},${Y}`][move]= '.'
+              grid[`${X-1},${Y}`][reverse(move)] = '.'
+              X -= 1;
               break;
           }
         } else if (operandA === 2) {
           // console.log('FOUND GOAL')
           switch(move) {
             case 'n':
-              grid[`${currX},${currY+1}`]['goal']= true
+              grid[`${X},${Y+1}`]['goal']= true
+              Y += 1;
+              return grid;
               break;
             case 's':
-              grid[`${currX},${currY-1}`]['goal']= true
+              grid[`${X},${Y-1}`]['goal']= true
+              Y -= 1;
+              return grid;
               break;
             case 'e':
-              grid[`${currX+1},${currY}`]['goal']= true
+              grid[`${X+1},${Y}`]['goal']= true
+              X += 1;
+              return grid;
               break;
             case 'w':
-              grid[`${currX-1},${currY}`]['goal']= true
+              grid[`${X-1},${Y}`]['goal']= true
+              X -=1;
+              return grid;
               break;
           }
         }
@@ -259,13 +267,79 @@ const findGoal = () => {
 findGoal();
 // console.log(grid);
 
+
+for (let room in grid) {
+  if (grid[room]['goal']) {
+    console.log(`goal at ${room}`)
+    grid[room]['me'] = 'O'
+  }
+}
+
 let ret = ''
 
-for (let i = -30; i < 30; i++) {
-  for (let j = -30; j < 30; j++) {
-    ret += grid[`${i},${j}`]['me']
+for (let i = 29; i > -30; i--) {
+  for (let j = -29; j < 30; j++) {
+    ret += grid[`${j},${i}`]['me']
   }
   ret += '\n'
 }
 
 console.log(ret);
+
+class Queue {
+  constructor() {
+    this.storage = []
+  }
+
+  enqueue(element) {
+    this.storage.push(element)
+  }
+
+  dequeue() {
+    if (!this.storage.length) {
+      return 'Empty Queue'
+    } else {
+      return this.storage.shift();
+    }
+  }
+}
+
+
+// bfs algo to find length of shortest path between two points
+const bfs = (start, end) => {
+  const visited = new Set();
+
+  const q = new Queue();
+
+  q.enqueue([start]);
+
+  while(q.storage.length) {
+    let v = q.dequeue()
+    let node = v[v.length - 1]
+    // console.log(node);
+    if (!visited.has(node) && grid[node]) {
+      let nodeArr = node.split(',').map(Number);
+      // console.log(nodeArr);
+      let neighbors = [
+        `${nodeArr[0]},${nodeArr[1]+1}`,
+        `${nodeArr[0]},${nodeArr[1]-1}`,
+        `${nodeArr[0]+1},${nodeArr[1]}`,
+        `${nodeArr[0]-1},${nodeArr[1]}`,
+      ];
+      for (let neighbor of neighbors) {
+        if (grid[neighbor]['me'] !== '#') {
+          let path = [...v]
+          path.push(neighbor)
+          q.enqueue(path)
+          if (neighbor === end) {
+            // return length of path from start to end
+            return path.length - 1
+          }
+        }
+      }
+      visited.add(node)
+    }
+  }
+}
+
+console.log(bfs('0,0','-20,-18'));
