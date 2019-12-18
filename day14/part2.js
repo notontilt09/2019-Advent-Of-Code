@@ -52,9 +52,30 @@ const produce = (name, amount) => {
   }
 
   inventory[name] = (inventory[name] || 0) + (ratio * keyAmounts[name])
+  // console.log(ore);
   return ore;
 }
 
-console.log(produce('FUEL', 1));
 
+
+// binary search the right amount of fuel produced by 1e12 ORE
+let low = 0
+let high = 1<<30
+let currOre;
+
+
+while (low < high) {
+  console.log(low, high);
+  let mid = Math.floor((low + high) / 2);
+  currOre = produce('FUEL', mid)
+  console.log('currOre', currOre)
+  if (currOre < 1e12) {
+    low = mid + 1;
+  } else {
+    high = mid - 1;
+  }
+  console.log('new low', low, 'new high', high);
+}
+
+console.log(low)
 
