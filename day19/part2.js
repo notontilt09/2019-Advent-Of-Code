@@ -118,7 +118,6 @@ let y = 99;
 
 // follow bottom of ray until we find a point where up99,right99 is also in beam
 while (true) {
-  console.log(x, y);
   // if in the beam check up99, right99 point
   if (run(x,y)) {
     // if up99, right99 in beam, we're at bottom left spot
